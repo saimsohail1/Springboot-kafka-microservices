@@ -19,4 +19,4 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         spring.json.trusted.packages: "*"
-#        spring.json.value.default.type: org.inventoryservice.event.OrderCreatedEvent
+        spring.json.value.default.type: org.inventoryservice.event.OrderCreatedEvent
