@@ -1,6 +1,7 @@
-version: '3.8'
+version: "3.8"
 
 services:
+
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.0
     environment:
@@ -17,5 +18,77 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  order-db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: orders
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+    volumes:
+      - order-db-data:/var/lib/postgresql/data
+
+  inventory-db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: inventory
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+    volumes:
+      - inventory-db-data:/var/lib/postgresql/data
+
+  payment-db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: payments
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+    volumes:
+      - payment-db-data:/var/lib/postgresql/data
+
+  order-service:
+    build: ./Order-service
+    depends_on:
+      - kafka
+      - order-db
+    ports:
+      - "8081:8081"
+    environment:
+      DB_URL: jdbc:postgresql://order-db:5432/orders
+      DB_USER: postgres
+      DB_PASSWORD: 1234
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+
+  inventory-service:
+    build: ./Inventory-service
+    depends_on:
+      - kafka
+      - inventory-db
+    ports:
+      - "8082:8082"
+    environment:
+      DB_URL: jdbc:postgresql://inventory-db:5432/inventory
+      DB_USER: postgres
+      DB_PASSWORD: 1234
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+
+  payment-service:
+    build: ./Payment-service
+    depends_on:
+      - kafka
+      - payment-db
+    ports:
+      - "8083:8083"
+    environment:
+      DB_URL: jdbc:postgresql://payment-db:5432/payments
+      DB_USER: postgres
+      DB_PASSWORD: 1234
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+
+volumes:
+  order-db-data:
+  inventory-db-data:
+  payment-db-data:
