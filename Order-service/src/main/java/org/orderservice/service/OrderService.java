@@ -31,7 +31,7 @@ public class OrderService {
         
         Orders savedOrder = repository.save(order);
 
-        // Publish event to Kafka
+        // Publish event to Kafka (async, non-blocking - handled in producer)
         OrderCreatedEvent event = new OrderCreatedEvent();
         event.setOrderId(savedOrder.getId());
         event.setProductId(savedOrder.getProductId());
@@ -47,4 +47,5 @@ public class OrderService {
         return repository.findAll();
     }
 }
+
 

@@ -10,6 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/orders")
+@CrossOrigin(origins = "*")
 public class OrderController {
 
     private final OrderService service;
@@ -28,4 +29,5 @@ public class OrderController {
         return ResponseEntity.ok(service.getAll());
     }
 }
+
 
