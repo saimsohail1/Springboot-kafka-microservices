@@ -9,6 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/inventory")
+@CrossOrigin(origins = "*")
 public class InventoryController {
 
     private final InventoryService service;
@@ -25,5 +26,10 @@ public class InventoryController {
     @GetMapping("/{productId}")
     public ResponseEntity<InventoryItem> getByProduct(@PathVariable String productId) {
         return ResponseEntity.ok(service.getByProductId(productId));
+    }
+
+    @PostMapping
+    public ResponseEntity<InventoryItem> createInventoryItem(@RequestBody InventoryItem item) {
+        return ResponseEntity.ok(service.createInventoryItem(item));
     }
 }

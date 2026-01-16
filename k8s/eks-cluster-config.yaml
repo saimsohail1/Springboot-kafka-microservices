@@ -1,0 +1,29 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: microservices-cluster
+  region: eu-west-1
+  version: "1.32"
+
+iam:
+  withOIDC: true
+
+vpc:
+  clusterEndpoints:
+    publicAccess: true
+    privateAccess: false
+
+managedNodeGroups:
+  - name: standard-workers
+    instanceType: t3.medium
+    desiredCapacity: 1
+    minSize: 1
+    maxSize: 2
+    volumeSize: 20
+    labels:
+      role: worker
+
+cloudWatch:
+  clusterLogging:
+    enableTypes: ["*"]

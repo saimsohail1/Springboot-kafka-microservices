@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microservices Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 Microservices Dashboard</h1>
+            <p>Order, Inventory & Payment Management</p>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab('orders')">📦 Orders</button>
+            <button class="tab-btn" onclick="showTab('inventory')">📊 Inventory</button>
+            <button class="tab-btn" onclick="showTab('payments')">💳 Payments</button>
+        </div>
+
+        <!-- Orders Tab -->
+        <div id="orders-tab" class="tab-content active">
+            <div class="section-header">
+                <h2>Orders</h2>
+                <button class="btn-primary" onclick="showCreateOrderModal()">+ Create Order</button>
+            </div>
+            <div class="table-container">
+                <table id="orders-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Product ID</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orders-tbody">
+                        <tr>
+                            <td colspan="5" class="loading">Loading orders...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Inventory Tab -->
+        <div id="inventory-tab" class="tab-content">
+            <div class="section-header">
+                <h2>Inventory</h2>
+                <button class="btn-primary" onclick="showCreateInventoryModal()">+ Add Inventory</button>
+            </div>
+            <div class="table-container">
+                <table id="inventory-table">
+                    <thead>
+                        <tr>
+                            <th>Product ID</th>
+                            <th>Available Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventory-tbody">
+                        <tr>
+                            <td colspan="3" class="loading">Loading inventory...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Payments Tab -->
+        <div id="payments-tab" class="tab-content">
+            <div class="section-header">
+                <h2>Payments</h2>
+                <button class="btn-primary" onclick="showCreatePaymentModal()">+ Create Payment</button>
+            </div>
+            <div class="table-container">
+                <table id="payments-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Order ID</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="payments-tbody">
+                        <tr>
+                            <td colspan="4" class="loading">Loading payments...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Order Modal -->
+    <div id="create-order-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeCreateOrderModal()">&times;</span>
+            <h2>Create New Order</h2>
+            <form id="create-order-form" onsubmit="createOrder(event)">
+                <div class="form-group">
+                    <label for="productId">Product ID:</label>
+                    <input type="text" id="productId" name="productId" required>
+                </div>
+                <div class="form-group">
+                    <label for="quantity">Quantity:</label>
+                    <input type="number" id="quantity" name="quantity" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="price">Price:</label>
+                    <input type="number" id="price" name="price" step="0.01" min="0" required>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Create Order</button>
+                    <button type="button" class="btn-secondary" onclick="closeCreateOrderModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Create Inventory Modal -->
+    <div id="create-inventory-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeCreateInventoryModal()">&times;</span>
+            <h2>Add Inventory Item</h2>
+            <form id="create-inventory-form" onsubmit="createInventoryItem(event)">
+                <div class="form-group">
+                    <label for="inv-productId">Product ID:</label>
+                    <input type="text" id="inv-productId" name="productId" required>
+                </div>
+                <div class="form-group">
+                    <label for="availableQuantity">Available Quantity:</label>
+                    <input type="number" id="availableQuantity" name="availableQuantity" min="0" required>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Add Inventory</button>
+                    <button type="button" class="btn-secondary" onclick="closeCreateInventoryModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Create Payment Modal -->
+    <div id="create-payment-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeCreatePaymentModal()">&times;</span>
+            <h2>Create Payment</h2>
+            <form id="create-payment-form" onsubmit="createPayment(event)">
+                <div class="form-group">
+                    <label for="payment-orderId">Order ID:</label>
+                    <input type="text" id="payment-orderId" name="orderId" placeholder="e.g. e90451c0-6296-4506-88e0-ee6b80584bc7" required>
+                </div>
+                <div class="form-group">
+                    <label for="payment-amount">Amount:</label>
+                    <input type="number" id="payment-amount" name="amount" step="0.01" min="0" required>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Create Payment</button>
+                    <button type="button" class="btn-secondary" onclick="closeCreatePaymentModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
+
